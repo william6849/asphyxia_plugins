@@ -224,16 +224,6 @@ $(document).ready(function() {
         }
         $('[name="bplSupport"]').val(profile_data["bplSupport"] ? profile_data["bplSupport"] : 0);
 
-        for (var i in json["sysbg"]) {
-            if(unlock_all || (items_sysbg.find(x => x.id === json["sysbg"][i].id) || json["sysbg"][i].id === 0)) {
-                $('[name="sysBG"]').append($('<option>', {
-                    value: json["sysbg"][i].id,
-                    text: json["sysbg"][i].name,
-                }));
-            }
-        }
-        $('[name="sysBG"]').val(profile_data["sysBG"] ? profile_data["sysBG"] : 0);
-
         for (var i in json["skilltitle"]) {
             let foundCourses = courses.filter(c => c.cid === json["skilltitle"][i].id && c.clear >= 2)
             if(foundCourses.length > 0) {   
@@ -290,6 +280,16 @@ $(document).ready(function() {
             }
         }
         $('[name="subbg"]').val(profile_data["subbg"]);
+
+        for (var i in json["sysbg"]) {
+            if(unlock_all || (items_sysbg.find(x => x.id === json["sysbg"][i].id) || json["sysbg"][i].id === 0)) {
+                $('[name="sysBG"]').append($('<option>', {
+                    value: json["sysbg"][i].value,
+                    text: json["sysbg"][i].name,
+                }));
+            }
+        }
+        $('[name="sysBG"]').val(profile_data["sysBG"]);
 
         for (var i in json["bgm"]) {
             if(unlock_all || (json["bgm"][i].value === 0 || items_bgm.find(x => parseInt(x.id) === parseInt(json["bgm"][i].value)))) {

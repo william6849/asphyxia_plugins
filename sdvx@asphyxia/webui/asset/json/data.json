@@ -589,6 +589,24 @@
          "name":"Sayonara Planet Wars"
       }
    ],
+   "sysbg": [
+		{
+			"value": 0,
+			"name": "Default"
+		},
+		{
+			"value": 1,
+			"name": "BOOTH"
+		},
+		{
+			"value": 2,
+			"name": "Infinite Infection"
+		},
+		{
+			"value": 3,
+			"name": "Gravity Wars"
+		}
+	],
    "stamp":[
       {
          "value":0,

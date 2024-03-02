@@ -233,6 +233,7 @@ export const copyResourcesFromGame = async (data: {}, send: WebUISend) => {
   let newAPCardData = []
   let newSubBGData = []
   let newBGMData = []
+  let newSysBGData = []
   let newChatStampData = []
   let newValgeneItemFiles = []
   let newAkanames = []
@@ -467,6 +468,31 @@ export const copyResourcesFromGame = async (data: {}, send: WebUISend) => {
     runErrors.push('[BGM] Error reading BGM directory. Check your "Exceed Gear Data Directory" config.')
   }
 
+  // Copying new sysbg files from gamedata
+  console.log("Copying new sysbg files from gamedata")
+  if(IO.Exists(U.GetConfig('sdvx_eg_root_dir') + "/data/graphics/select_bg")) {
+    let sysbgFiles = await IO.ReadDir(U.GetConfig('sdvx_eg_root_dir') + "/data/graphics/select_bg")
+    for await (const sysbg of sysbgFiles) {
+      if(sysbg.name.match(/([0-9]+)/g) != undefined) {
+        let fileToWrite = await IO.ReadFile(U.GetConfig('sdvx_eg_root_dir') + "/data/graphics/select_bg/" + sysbg.name)
+        if(!IO.Exists('webui/asset/select_bg/' + sysbg.name.substring(0, (sysbg.name.length - 4)) + ".png") && !IO.Exists('webui/asset/select_bg/' + sysbg.name.substring(0, (sysbg.name.length - 4))  + ".jpg")) {
+          console.log("[sysbg] copying " + sysbg.name)
+          IO.WriteFile('webui/asset/sysbg/' + sysbg.name, fileToWrite)
+        }
+
+        let sysbgId = parseInt(sysbg.name.match(/([0-9]+)/g)[0])
+        if(sysbgId && resourceJsonData.sysbg.find(sysbg => sysbg.value == sysbgId) == undefined) {
+          console.log("[sysbg] adding to json: " + sysbg.name)
+          newSysBGData.push(sysbg.name)
+          resourceJsonData.sysbg.push({"value": sysbgId, "name": sysbg.name})
+        }
+      }
+    }
+  } else {
+    console.log('Error reading sysbg directory. Check your "Exceed Gear Data Directory" config.')
+    runErrors.push('[sysbg] Error reading sysbg directory. Check your "Exceed Gear Data Directory" config.')
+  }
+
   // Copying new chat stamps from gamedata
   console.log("Copying new chat stamps from gamedata")
   if(IO.Exists(U.GetConfig('sdvx_eg_root_dir') + "/data/others/chat_stamp.xml")) {
@@ -693,6 +719,7 @@ export const copyResourcesFromGame = async (data: {}, send: WebUISend) => {
       apCard: newAPCardData,
       subbg: newSubBGData,
       bgm: newBGMData,
+      sysbg: newSysBGData,
       chatStamp: newChatStampData,
       valgeneItemFiles: newValgeneItemFiles,
       versionSongs: newVersionSongs.sort((a, b) => a[0] - b[0]),

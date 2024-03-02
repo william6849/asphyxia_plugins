@@ -17,7 +17,7 @@ $(document).ready(async function() {
             await emit("copyResourcesFromGame").then(
                 function(response){
                     document.getElementById("logtextarea").textContent = 'Done.\n\n'
-                    document.getElementById("logtextarea").textContent += 'NOTE:\n- labels for these new files (nemsys, bgm, submonitor bg, chat stamps) in the asset/json/data.json file needs to be updated.\n'
+                    document.getElementById("logtextarea").textContent += 'NOTE:\n- labels for these new files (nemsys, bgm, submonitor bg, system bg, chat stamps) in the asset/json/data.json file needs to be updated.\n'
                     document.getElementById("logtextarea").textContent += '- for converting s3p files to mp3, check guide in the notes section above.\n\n'
 
                     if(response['data']['errors'].length > 0) {
@@ -77,6 +77,14 @@ $(document).ready(async function() {
                     if(response['data']['bgm'].length > 0) {
                         document.getElementById("logtextarea").textContent += 'New bgm: \n'
                         $.each(response['data']['bgm'], function(key, val) {
+                            document.getElementById("logtextarea").textContent += "- " +  val + '\n'
+                        })
+                        document.getElementById("logtextarea").textContent += '\n\n'
+                    }
+
+                    if(response['data']['sysbg'].length > 0) {
+                        document.getElementById("logtextarea").textContent += 'New system backgrounds: \n'
+                        $.each(response['data']['sysbg'], function(key, val) {
                             document.getElementById("logtextarea").textContent += "- " +  val + '\n'
                         })
                         document.getElementById("logtextarea").textContent += '\n\n'
